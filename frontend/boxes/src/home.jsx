@@ -1,10 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Resizable } from "re-resizable";
 
 function Home() {
+  const [allData, setAllData] = useState();
+
+  const [boxNo, setBoxNo] = useState(1);
+
+  const [textData, setTextData] = useState();
+
+  const getAllData = () => {
+    fetch("http://localhost:3002/getAllData")
+      .then(async (data) => setAllData(await data.json()))
+      .catch((err) => {
+        console.log({ err });
+      });
+  };
+
+  useEffect(() => {
+    getAllData();
+  }, []);
+
+  console.log({ allData });
+
+  const sendData = () => {
+    console.log(textData, boxNo);
+    fetch("http://localhost:3002/add", {
+      method: "post",
+      body: JSON.stringify({ text: textData, boxNum: boxNo }),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((data) => getAllData())
+      .catch((err) => {
+        console.log({ err });
+      });
+  };
+
   return (
     <div>
+      <div>
+        <label>box no : </label>{" "}
+        <input
+          onChange={(e) => {
+            setBoxNo(e.target.value);
+          }}
+          type="number"
+          defaultValue={1}
+        />
+        <label>text : </label>
+        <input
+          onChange={(e) => {
+            setTextData(e.target.value);
+          }}
+          type="text"
+        />
+        <button onClick={sendData}>send Data</button>
+      </div>
       <div style={{ display: "flex" }}>
         <Resizable
           defaultSize={{
