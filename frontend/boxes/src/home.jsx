@@ -20,6 +20,7 @@ function Home() {
       })
       .catch((err) => {
         console.log({ err });
+        alert(err?.message);
       });
   };
 
@@ -36,9 +37,27 @@ function Home() {
       body: JSON.stringify({ text: textData, boxNum: boxNo }),
       headers: { "Content-Type": "application/json" },
     })
+      .then((data) => {
+        getAllData();
+        // alert(data?.message || "added successfully");
+      })
+      .catch((err) => {
+        console.log({ err });
+        alert(err?.message);
+      });
+  };
+
+  const updateData = (textData, id) => {
+    // console.log(textData, id);
+    fetch(`http://localhost:3002/update/${id}`, {
+      method: "put",
+      body: JSON.stringify({ text: textData, boxNum: boxNo }),
+      headers: { "Content-Type": "application/json" },
+    })
       .then((data) => getAllData())
       .catch((err) => {
         console.log({ err });
+        alert(err?.message);
       });
   };
 
@@ -69,6 +88,8 @@ function Home() {
             setBoxNo(e.target.value);
           }}
           type="number"
+          max={3}
+          min={1}
           defaultValue={1}
         />
         <label>text : </label>
@@ -90,7 +111,7 @@ function Home() {
           //   size={"50%"}
           style={{ border: "1px solid black", margin: 5 }}
         >
-          <View boxData={processedData[1]} />
+          <View boxData={processedData[1]} updateData={updateData} />
         </Resizable>
         <Resizable
           defaultSize={{
@@ -99,7 +120,7 @@ function Home() {
           }}
           style={{ border: "1px solid black", margin: 5 }}
         >
-          <View boxData={processedData[2]} />
+          <View boxData={processedData[2]} updateData={updateData} />
         </Resizable>
       </div>
       <div style={{ display: "flex" }}>
@@ -110,7 +131,7 @@ function Home() {
           }}
           style={{ border: "1px solid black", marginTop: 5 }}
         >
-          <View boxData={processedData[3]} />
+          <View boxData={processedData[3]} updateData={updateData} />
         </Resizable>
       </div>
     </div>
@@ -119,14 +140,25 @@ function Home() {
 
 export default Home;
 
-function View({ boxData }) {
-  console.log(boxData);
+function View({ boxData, updateData }) {
+  const [textData1, setTextData1] = useState();
   return (
     <div>
       {boxData?.map((each) => {
         return (
           <div key={each?._id}>
-            <text>{each?.text}</text>
+            <span>{each?.text}</span>
+
+            <input
+              type="text"
+              onChange={(e) => {
+                setTextData1(e.target.value);
+              }}
+            />
+
+            <button onClick={() => updateData(textData1, each._id)}>
+              update
+            </button>
           </div>
         );
       })}

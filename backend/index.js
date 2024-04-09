@@ -57,14 +57,14 @@ app.post('/add', async (req, res) => {
 });
 
 // Update API endpoint
-app.put('/update/:key', (req, res) => {
-    const { key } = req.params;
-    const { value } = req.body;
-    if (!data[key]) {
-        return res.status(404).json({ error: 'Key not found.' });
+app.put('/update/:id', async (req, res) => {
+    const { id } = req.params;
+    const { text } = req.body;
+    if (!text) {
+        return res.status(400).json({ message: 'text can not be empty' });
     }
-    data[key] = value;
-    res.json({ message: 'Data updated successfully.', key, value });
+    const updatedData = await dataModel.findByIdAndUpdate(id, { text })
+    res.json({ message: 'Data updated successfully.', res: updatedData });
 });
 
 // Start the server
