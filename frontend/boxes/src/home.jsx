@@ -105,8 +105,8 @@ function Home() {
       <div style={{ display: "flex" }}>
         <Resizable
           defaultSize={{
-            width: 320,
-            height: 200,
+            width: "50%",
+            height: 400,
           }}
           //   size={"50%"}
           style={{ border: "1px solid black", margin: 5 }}
@@ -115,8 +115,8 @@ function Home() {
         </Resizable>
         <Resizable
           defaultSize={{
-            width: 320,
-            height: 200,
+            width: "50%",
+            height: 400,
           }}
           style={{ border: "1px solid black", margin: 5 }}
         >
@@ -126,8 +126,8 @@ function Home() {
       <div style={{ display: "flex" }}>
         <Resizable
           defaultSize={{
-            width: 320,
-            height: 200,
+            width: "100%",
+            height: 400,
           }}
           style={{ border: "1px solid black", marginTop: 5 }}
         >
@@ -144,6 +144,7 @@ function View({ boxData, updateData }) {
   const [textData1, setTextData1] = useState();
   return (
     <div>
+      {!boxData && <p>Please add Data</p>}
       {boxData?.map((each) => {
         return (
           <div key={each?._id}>
@@ -156,7 +157,11 @@ function View({ boxData, updateData }) {
               }}
             />
 
-            <button onClick={() => updateData(textData1, each._id)}>
+            <button
+              onClick={() => {
+                updateData(textData1, each._id);
+              }}
+            >
               update
             </button>
           </div>
