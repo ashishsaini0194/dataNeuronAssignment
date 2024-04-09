@@ -5,13 +5,19 @@ import { Resizable } from "re-resizable";
 function Home() {
   const [allData, setAllData] = useState();
 
+  const [processedData, setProcessedData] = useState();
+
   const [boxNo, setBoxNo] = useState(1);
 
   const [textData, setTextData] = useState();
 
   const getAllData = () => {
     fetch("http://localhost:3002/getAllData")
-      .then(async (data) => setAllData(await data.json()))
+      .then(async (data) => {
+        const myData = await data.json();
+        setAllData(myData);
+        manipulateData(myData);
+      })
       .catch((err) => {
         console.log({ err });
       });
@@ -21,7 +27,7 @@ function Home() {
     getAllData();
   }, []);
 
-  console.log({ allData });
+  //   console.log({ allData });
 
   const sendData = () => {
     console.log(textData, boxNo);
@@ -34,6 +40,21 @@ function Home() {
       .catch((err) => {
         console.log({ err });
       });
+  };
+
+  const manipulateData = (data) => {
+    const obj = {};
+    // console.log(data);
+    data?.res?.forEach((each) => {
+      //   console.log(each);
+      if (obj[each.boxNum]) {
+        obj[each.boxNum] = [each, ...obj[each.boxNum]];
+      } else {
+        obj[each.boxNum] = [each];
+      }
+    });
+    console.log(obj);
+    setProcessedData(obj);
   };
 
   return (
@@ -56,6 +77,7 @@ function Home() {
         />
         <button onClick={sendData}>send Data</button>
       </div>
+
       <div style={{ display: "flex" }}>
         <Resizable
           defaultSize={{
