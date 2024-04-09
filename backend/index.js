@@ -23,7 +23,18 @@ const Data = new Schema({
     boxNum: { type: 'number', required: true }
 });
 
+const Logs = new Schema({
+    updatedText: { type: 'string', required: true },
+
+    action: { type: 'string', required: true },
+    boxNum: { type: 'number', required: true },
+    dataId: { type: Schema.Types.ObjectId, required: true }
+
+});
+
 const dataModel = mongoose.model('data', Data);
+
+const logsModel = mongoose.model('log', Logs);
 
 
 // Middleware to parse JSON bodies
@@ -35,11 +46,30 @@ let data = {};
 app.get('/getAllData', async (req, res) => {
     console.log({ data })
     const readRes = await dataModel.find();
+    const logData = await logsModel.aggregate([
+        {
+            $group: {
+                _id: '$action',
+                count: { $sum: 1 }
+            }
+        }
+    ],)
+    // console.log({ logData })
     if (readRes)
-        return res.json({ message: 'Data fetched successfully.', res: readRes });
+        return res.json({ message: 'Data fetched successfully.', res: readRes, logData });
     else
         return res.status(400).json({ message: 'error while fetching data', res: readRes });
 });
+
+const updateLog = async (boxNum, id, text, action) => {
+    const writableData = {
+        updatedText: text,
+        boxNum: boxNum,
+        dataId: id,
+        action
+    }
+    await logsModel.create(writableData)
+}
 
 // Add API endpoint
 app.post('/add', async (req, res) => {
@@ -50,10 +80,12 @@ app.post('/add', async (req, res) => {
     }
     const writableData = req.body;
     const writeRes = await dataModel.create(writableData);
+    await updateLog(boxNum, writeRes?._id, text, 'add')
+
     if (writeRes)
         return res.json({ message: 'Data added successfully.', writeRes });
-    else
-        return res.status(400).json({ message: 'error while adding data', writeRes });
+
+    return res.status(400).json({ message: 'error while adding data', writeRes });
 });
 
 // Update API endpoint
@@ -64,6 +96,9 @@ app.put('/update/:id', async (req, res) => {
         return res.status(400).json({ message: 'text can not be empty' });
     }
     const updatedData = await dataModel.findByIdAndUpdate(id, { text })
+    if (!updatedData)
+        return res.status(400).json({ message: 'error while updating data', updatedData });
+    await updateLog(updatedData.boxNum, id, text, 'update')
     res.json({ message: 'Data updated successfully.', res: updatedData });
 });
 

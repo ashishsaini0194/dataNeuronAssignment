@@ -82,6 +82,15 @@ function Home() {
   return (
     <div>
       <div>
+        {allData?.logData.map((each) => {
+          return (
+            <p>
+              {each._id} api has been called : {each?.count}
+            </p>
+          );
+        })}
+      </div>
+      <div>
         <label>box no : </label>{" "}
         <input
           onChange={(e) => {
