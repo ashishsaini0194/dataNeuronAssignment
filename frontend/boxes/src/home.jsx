@@ -5,7 +5,7 @@ import { Resizable } from "re-resizable";
 function Home() {
   const [allData, setAllData] = useState();
 
-  const [processedData, setProcessedData] = useState();
+  const [processedData, setProcessedData] = useState({});
 
   const [boxNo, setBoxNo] = useState(1);
 
@@ -53,9 +53,12 @@ function Home() {
         obj[each.boxNum] = [each];
       }
     });
-    console.log(obj);
-    setProcessedData(obj);
+    // console.log(obj);
+    setProcessedData({ ...obj });
   };
+  //   useEffect(() => {
+  //     console.log(processedData);
+  //   }, [processedData]);
 
   return (
     <div>
@@ -87,7 +90,7 @@ function Home() {
           //   size={"50%"}
           style={{ border: "1px solid black", margin: 5 }}
         >
-          Sample with default size
+          <View boxData={processedData[1]} />
         </Resizable>
         <Resizable
           defaultSize={{
@@ -96,7 +99,7 @@ function Home() {
           }}
           style={{ border: "1px solid black", margin: 5 }}
         >
-          Sample with default size
+          <View boxData={processedData[2]} />
         </Resizable>
       </div>
       <div style={{ display: "flex" }}>
@@ -107,7 +110,7 @@ function Home() {
           }}
           style={{ border: "1px solid black", marginTop: 5 }}
         >
-          Sample with default size
+          <View boxData={processedData[3]} />
         </Resizable>
       </div>
     </div>
@@ -115,3 +118,18 @@ function Home() {
 }
 
 export default Home;
+
+function View({ boxData }) {
+  console.log(boxData);
+  return (
+    <div>
+      {boxData?.map((each) => {
+        return (
+          <div key={each?._id}>
+            <text>{each?.text}</text>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
