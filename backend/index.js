@@ -110,5 +110,4 @@ app.listen(PORT, () => {
 
 
 //for vercel
-const serverless = require('serverless-http');
-module.exports.handler = serverless(app);
+module.exports = app;
