@@ -92,15 +92,22 @@ function Home() {
       </div>
       <div>
         <label>box no : </label>{" "}
-        <input
+        <select onChange={(e) => setBoxNo(e.target.value)} name="box num">
+          <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+        </select>
+        {/* <input
           onChange={(e) => {
-            setBoxNo(e.target.value);
+            if (typeof e.target.value === "number") {
+              setBoxNo(e.target.value);
+            }
           }}
           type="number"
           max={3}
           min={1}
           defaultValue={1}
-        />
+        /> */}
         <label>text : </label>
         <input
           onChange={(e) => {
