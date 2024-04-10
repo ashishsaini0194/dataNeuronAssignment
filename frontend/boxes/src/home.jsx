@@ -12,7 +12,9 @@ function Home() {
   const [textData, setTextData] = useState();
 
   const getAllData = () => {
-    fetch("http://localhost:3002/getAllData")
+    fetch(
+      "https://data-neuron-assignment-backend-horky448c.vercel.app/getAllData"
+    )
       .then(async (data) => {
         const myData = await data.json();
         setAllData(myData);
@@ -32,7 +34,7 @@ function Home() {
 
   const sendData = () => {
     console.log(textData, boxNo);
-    fetch("http://localhost:3002/add", {
+    fetch("https://data-neuron-assignment-backend-horky448c.vercel.app/add", {
       method: "post",
       body: JSON.stringify({ text: textData, boxNum: boxNo }),
       headers: { "Content-Type": "application/json" },
@@ -49,11 +51,14 @@ function Home() {
 
   const updateData = (textData, id) => {
     // console.log(textData, id);
-    fetch(`http://localhost:3002/update/${id}`, {
-      method: "put",
-      body: JSON.stringify({ text: textData, boxNum: boxNo }),
-      headers: { "Content-Type": "application/json" },
-    })
+    fetch(
+      `https://data-neuron-assignment-backend-horky448c.vercel.app/update/${id}`,
+      {
+        method: "put",
+        body: JSON.stringify({ text: textData, boxNum: boxNo }),
+        headers: { "Content-Type": "application/json" },
+      }
+    )
       .then((data) => getAllData())
       .catch((err) => {
         console.log({ err });
