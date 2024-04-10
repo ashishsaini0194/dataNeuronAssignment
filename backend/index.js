@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 
 
 // Connection URL
-const url = 'mongodb://localhost:27017/dataNueron';
+const url = 'mongodb+srv://dataNeuron:dataNeuron@datatneuron.glwqmta.mongodb.net/dataNueron';
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then((res) => {
     console.log('successfully connected')
